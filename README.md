@@ -12,6 +12,13 @@ npm start
 
 Server runs on `http://localhost:3000` by default.
 
+## Docker
+
+```bash
+docker build -t html-to-ppt .
+docker run --rm -p 3000:3000 -e PORT=3000 html-to-ppt
+```
+
 ## Endpoints
 
 - `GET /health`
