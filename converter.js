@@ -4,11 +4,28 @@ function cleanText(text) {
   return (text || '').replace(/\s+/g, ' ').trim();
 }
 
+function decodeHtmlEntities(text) {
+  if (!text) return '';
+  return text
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/&amp;/gi, '&')
+    .replace(/&lt;/gi, '<')
+    .replace(/&gt;/gi, '>')
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;/gi, "'");
+}
+
+function stripTags(html) {
+  return decodeHtmlEntities(
+    (html || '')
+      .replace(/<br\s*\/?>/gi, '\n')
+      .replace(/<[^>]*>/g, ' ')
+  );
+}
+
 function extractBlocks(html) {
-  const { JSDOM } = require('jsdom');
-  const dom = new JSDOM(`<body>${html || ''}</body>`);
-  const { document } = dom.window;
   const blocks = [];
+  const source = html || '';
 
   function pushBlock(kind, text, level = 0) {
     const value = cleanText(text);
@@ -17,40 +34,18 @@ function extractBlocks(html) {
     }
   }
 
-  function walk(node) {
-    if (!node || node.nodeType !== 1) return;
-
-    const tag = node.tagName.toLowerCase();
-
-    if (tag === 'h1') {
-      pushBlock('h1', node.textContent);
-      return;
+  const blockRegex = /<(h1|h2|h3|p|li)\b[^>]*>([\s\S]*?)<\/\1>/gi;
+  let match;
+  while ((match = blockRegex.exec(source)) !== null) {
+    const tag = match[1].toLowerCase();
+    const text = stripTags(match[2]);
+    if (tag === 'li') {
+      pushBlock('li', `\u2022 ${text}`);
+    } else {
+      pushBlock(tag, text);
     }
-    if (tag === 'h2') {
-      pushBlock('h2', node.textContent);
-      return;
-    }
-    if (tag === 'h3') {
-      pushBlock('h3', node.textContent);
-      return;
-    }
-    if (tag === 'p') {
-      pushBlock('p', node.textContent);
-      return;
-    }
-    if (tag === 'ul' || tag === 'ol') {
-      const items = Array.from(node.children).filter((el) => el.tagName.toLowerCase() === 'li');
-      items.forEach((li, idx) => {
-        const marker = tag === 'ol' ? `${idx + 1}. ` : '\u2022 ';
-        pushBlock('li', `${marker}${li.textContent}`);
-      });
-      return;
-    }
-
-    Array.from(node.children).forEach(walk);
   }
 
-  Array.from(document.body.children).forEach(walk);
   return blocks;
 }
 
