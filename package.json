@@ -1,0 +1,28 @@
+{
+  "name": "html-to-ppt",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "node -e \"console.log(\\\"No tests configured\\\")\"",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chiragdotco/html-to-ppt.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/chiragdotco/html-to-ppt/issues"
+  },
+  "homepage": "https://github.com/chiragdotco/html-to-ppt#readme",
+  "dependencies": {
+    "express": "^5.2.1",
+    "jsdom": "^29.0.2",
+    "playwright": "^1.59.1",
+    "pptxgenjs": "^4.0.1"
+  }
+}
