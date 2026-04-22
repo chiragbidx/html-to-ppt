@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "node -e \"console.log(\\\"No tests configured\\\")\"",
+    "test": "node tests/smoke.js",
     "start": "node index.js"
   },
   "repository": {
@@ -23,7 +23,11 @@
     "node": ">=20.19.0"
   },
   "dependencies": {
+    "@napi-rs/canvas": "^0.1.99",
     "express": "^5.2.1",
+    "multer": "^2.1.1",
+    "pdf-lib": "^1.17.1",
+    "pdfjs-dist": "^5.6.205",
     "playwright": "^1.59.1",
     "pptxgenjs": "^4.0.1"
   }
